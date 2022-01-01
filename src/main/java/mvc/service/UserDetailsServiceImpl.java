@@ -1,31 +1,46 @@
 package mvc.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import mvc.dao.UserDao;
+import mvc.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import mvc.model.User;
 
 
 @Service
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserService userService;
+    private final UserDao userDao;
 
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public UserDetailsServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userService.getUserByName(s);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userDao.getUserByName(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found " + s);
+            throw new UsernameNotFoundException(username + " not found");
         }
         return user;
     }
+
+//    private UserService userService;
+//
+//    @Autowired
+//    public void setUserService(UserService userService) {
+//        this.userService = userService;
+//    }
+//
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userService.getUserByName(username);
+//        if (user == null) {
+//            throw new UsernameNotFoundException("User not found " + username);
+//        }
+//        return user;
+//    }
 }

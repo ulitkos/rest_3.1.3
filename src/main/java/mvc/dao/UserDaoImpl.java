@@ -1,7 +1,7 @@
 package mvc.dao;
 
-import org.springframework.stereotype.Repository;
 import mvc.model.User;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,19 +37,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-
+    //@Query("select u from User u left join fetch u.roles")
     public List<User> getAllUsers() {
-        return entityManager.createQuery("from User", User.class).getResultList();
+        //return entityManager.createQuery("from User", User.class).getResultList();
+        return entityManager.createQuery("select distinct u from User u left join fetch u.roles", User.class).getResultList();
     }
 
-//    @Override
-//    public User getUserByName(String username) {
-//        return entityManager.find(User.class, username);
-//    }
 
     @Override
     public User getUserByName(String username) {
-        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.username=:username",
+        TypedQuery<User> query = entityManager.createQuery("select u from User u left join fetch u.roles where u.username=:username",
                 User.class).setParameter("username", username);
         return query.getSingleResult();
     }
