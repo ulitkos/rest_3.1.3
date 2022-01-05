@@ -1,5 +1,7 @@
 package mvc.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,7 +35,7 @@ public class User implements UserDetails {
 
 
     @ManyToMany(fetch = FetchType.LAZY)
-    //@Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.JOIN)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
